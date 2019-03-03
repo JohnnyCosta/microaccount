@@ -1,0 +1,13 @@
+apply plugin: 'java-library'
+
+ext.moduleName = 'org.micro.config'
+
+dependencies {
+  implementation(
+    project(':domain'),
+    project(':scenario'),
+    project(':id-generator'),
+    project(':repository'),
+    project(':controller'),
+  )
+}

@@ -1,0 +1,36 @@
+subprojects {
+  apply plugin: 'java'
+
+  group = 'org.micro'
+  version = '1.0.0'
+
+  sourceCompatibility = 1.11
+  targetCompatibility = 1.11
+
+  dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.6'
+    annotationProcessor 'org.projectlombok:lombok:1.18.6'
+  }
+
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+  
+  afterEvaluate {
+    repositories {
+      mavenCentral()
+      jcenter()
+    }
+
+    compileJava {
+      inputs.property("moduleName", moduleName)
+      doFirst {
+        options.compilerArgs = [
+          '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+apply plugin: 'java-library'
+
+ext.moduleName = 'org.micro.repository'
+
+dependencies {
+  implementation(
+    project(':domain')
+  )
+}

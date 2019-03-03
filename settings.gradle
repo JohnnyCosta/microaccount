@@ -1,0 +1,18 @@
+rootProject.name = 'microaccount'
+
+include ':domain'
+include ':scenario'
+include ':repository'
+include ':id-generator'
+include ':controller'
+include ':config'
+include ':account-app'
+include ':order-app'
+
+
+project(":repository").projectDir = file("adapter/repository")
+project(":controller").projectDir = file("adapter/controller")
+project(":id-generator").projectDir = file("adapter/id-generator")
+
+project(":account-app").projectDir = file("application/account-app")
+project(":order-app").projectDir = file("application/order-app")

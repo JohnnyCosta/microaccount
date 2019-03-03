@@ -1,0 +1,25 @@
+plugins {
+  id 'java-library'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+ext.moduleName = 'org.micro.app.account'
+
+dependencies {
+	implementation(
+		project(':config'),
+    project(':controller'),
+    'io.vertx:vertx-web:3.6.3',
+    'io.vertx:vertx-web-client:3.6.3',
+    'io.vertx:vertx-config:3.6.3',
+    'org.slf4j:slf4j-api:1.7.25',
+    'ch.qos.logback:logback-classic:1.2.3',
+	)
+}
+
+mainClassName = 'org.micro.app.account.App'
+
+shadowJar {
+  classifier = 'fat'
+}

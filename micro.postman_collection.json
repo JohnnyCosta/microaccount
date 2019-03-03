@@ -1,0 +1,107 @@
+{
+	"variables": [],
+	"info": {
+		"name": "micro",
+		"_postman_id": "47b9b1a4-312f-87b1-9773-0655692bfa81",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "account",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"request": {
+						"url": "localhost:8080/account",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"name1\",\n\t\"usd_balance\": 2\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get account",
+					"request": {
+						"url": "localhost:8080/account/262d677b-aad5-49df-a5a0-7ce267b4bcba",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get accounts",
+					"request": {
+						"url": "localhost:8080/accounts",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"description": "",
+			"item": [
+				{
+					"name": "Create order",
+					"request": {
+						"url": "localhost:8081/order",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"account_id\" : \"b5ff50bc-7135-4926-82b1-5b5e30be51d6\",\n\t\"price_limit\": 2\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get order",
+					"request": {
+						"url": "localhost:8081/order/27627d87-a649-48a0-8316-d4440a7d3112",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get orders",
+					"request": {
+						"url": "localhost:8081/orders",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
