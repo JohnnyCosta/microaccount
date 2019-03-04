@@ -19,7 +19,7 @@ public class Order {
 	private String accountId;
 
   @NonNull
-  private Long priceLimit;
+  private Float priceLimit;
 
   @NonNull
   private Boolean finished;

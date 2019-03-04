@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateAccountVM {
-  private String name;
-  private Float usd_balance;
+public class BtcPriceVM {
+  private Float price;
+  private String timestamp;
 }

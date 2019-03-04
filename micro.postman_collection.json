@@ -73,7 +73,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"account_id\" : \"b5ff50bc-7135-4926-82b1-5b5e30be51d6\",\n\t\"price_limit\": 2\n}"
+							"raw": "{\n\t\"account_id\" : \"7ab981fe-937f-4460-b047-253ef5717a7c\",\n\t\"price_limit\": 3600\n}"
 						},
 						"description": ""
 					},
@@ -102,6 +102,17 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "btc-price",
+			"request": {
+				"url": "localhost:5000/btc-price",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

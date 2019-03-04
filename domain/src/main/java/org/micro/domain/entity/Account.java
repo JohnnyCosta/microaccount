@@ -19,9 +19,9 @@ public class Account {
 	private String name;
 
   @NonNull
-  private Long usd;
+  private Float usd;
 
   @NonNull
-  private Long btc;
+  private Float btc;
 
 }

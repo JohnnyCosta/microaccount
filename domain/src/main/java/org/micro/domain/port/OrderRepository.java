@@ -11,6 +11,10 @@ public interface OrderRepository {
 
   Optional<Order> findById(String orderId);
 
+  Optional<Order> finish(String orderId);
+
+  Optional<Order> findByAccountId(String accountId);
+
   List<Order> findAll();
 
 }

@@ -12,8 +12,13 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.consul.ConsulServiceImporter;
 import lombok.extern.slf4j.Slf4j;
+import org.micro.client.AccountClient;
+import org.micro.client.BtcPriceClient;
 import org.micro.config.AppConfig;
 import org.micro.controller.OrderController;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class OrderVerticle extends AbstractVerticle {
@@ -31,6 +36,10 @@ public class OrderVerticle extends AbstractVerticle {
 
     ServiceDiscovery discovery = ServiceDiscovery.create(vertx);
 
+    AtomicReference<String> btcHost = new AtomicReference<>();
+    AtomicReference<String> btcQuery = new AtomicReference<>();
+    AtomicInteger btcPort = new AtomicInteger();
+
     var server = vertx.createHttpServer();
 
     var router = Router.router(vertx);
@@ -40,7 +49,10 @@ public class OrderVerticle extends AbstractVerticle {
     router
       .post("/order")
       .handler(event -> {
-        orderController.createOrder(event, discovery);
+        orderController.createOrder(event, new AccountClient(discovery),
+          new BtcPriceClient(btcHost.get(), btcQuery.get(), btcPort.get(),vertx),
+          vertx
+        );
       })
       .produces("application/json");
     router
@@ -60,6 +72,12 @@ public class OrderVerticle extends AbstractVerticle {
     retriever.getConfig(conf -> {
       var confResult = conf
         .result();
+
+      var btcConf = confResult
+        .getJsonObject("btc");
+      btcHost.set(btcConf.getString("host"));
+      btcQuery.set(btcConf.getString("query"));
+      btcPort.set(btcConf.getInteger("port"));
 
       var discoveryConfig = confResult
         .getJsonObject("discovery");
@@ -82,8 +100,8 @@ public class OrderVerticle extends AbstractVerticle {
         .put("Port", confResult
           .getInteger("port"))
         .put("Tags", new JsonArray().add("http-endpoint"));
-      WebClient client = WebClient.create(vertx);
 
+      WebClient client = WebClient.create(vertx);
 
       client
         .put(discoveryConfig.getInteger("port"), discoveryConfig.getString("host"), "/v1/agent/service/register")
@@ -94,7 +112,7 @@ public class OrderVerticle extends AbstractVerticle {
         });
     });
 
-    log.info("Finished to start account service");
+    log.info("Finished to start order service");
 
   }
 

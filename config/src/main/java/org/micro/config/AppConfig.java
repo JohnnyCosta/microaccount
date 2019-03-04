@@ -12,6 +12,7 @@ import org.micro.scenario.CreateAccount;
 import org.micro.scenario.CreateOrder;
 import org.micro.scenario.FindAccount;
 import org.micro.scenario.FindOrder;
+import org.micro.scenario.UpdateOrder;
 
 public class AppConfig {
 
@@ -22,8 +23,9 @@ public class AppConfig {
   private final AccountController accountController = new AccountController(createAccount, findAccount);
   private OrderRepository orderRepository = new InMemoryOrderRepository();
   private CreateOrder createOrder = new CreateOrder(orderRepository, idGenerator);
-  private FindOrder findOrder = new FindOrder(orderRepository,idGenerator);
-  private final OrderController orderController = new OrderController(createOrder, findOrder);
+  private FindOrder findOrder = new FindOrder(orderRepository);
+  private UpdateOrder updateOrder = new UpdateOrder(orderRepository);
+  private final OrderController orderController = new OrderController(createOrder, findOrder, updateOrder);
 
   public AccountController getAccountController() {
     return accountController;

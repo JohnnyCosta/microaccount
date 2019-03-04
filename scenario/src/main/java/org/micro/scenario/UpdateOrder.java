@@ -7,20 +7,16 @@ import org.micro.domain.port.OrderRepository;
 import java.util.List;
 import java.util.Optional;
 
-public final class FindOrder {
+public final class UpdateOrder {
 
   private final OrderRepository repository;
 
-  public FindOrder(final OrderRepository repository) {
+  public UpdateOrder(final OrderRepository repository) {
     this.repository = repository;
   }
 
-  public Optional<Order> fetchOrderDetails(String order_id) {
-    return repository.findById(order_id);
-  }
-
-  public List<Order> findAllOrders() {
-    return repository.findAll();
+  public Optional<Order> finish (String order_id) {
+   return repository.finish(order_id);
   }
 
 }

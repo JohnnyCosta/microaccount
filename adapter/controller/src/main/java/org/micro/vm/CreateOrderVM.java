@@ -7,5 +7,5 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateOrderVM {
   private String account_id;
-  private Long price_limit;
+  private Float price_limit;
 }

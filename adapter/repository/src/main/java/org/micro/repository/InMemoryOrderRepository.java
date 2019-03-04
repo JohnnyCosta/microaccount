@@ -31,6 +31,22 @@ public class InMemoryOrderRepository implements OrderRepository {
   }
 
   @Override
+  public Optional<Order> findByAccountId(String accountId) {
+    return inMemoryDb.values().stream()
+      .filter(order -> order.getAccountId().equals(accountId))
+      .findAny();
+  }
+
+  @Override
+  public Optional<Order> finish(String id) {
+    return findById(id)
+      .map(order -> {
+        order.setFinished(true);
+        return order;
+      });
+  }
+
+  @Override
   public List<Order> findAll() {
     return new ArrayList<>(inMemoryDb.values());
   }

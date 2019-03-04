@@ -3,15 +3,11 @@ package org.micro.client;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.Json;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import lombok.extern.slf4j.Slf4j;
 import org.micro.domain.entity.Account;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AccountClient {
@@ -22,7 +18,7 @@ public class AccountClient {
   }
 
   public AccountClient findAccount(String accountId, Handler<AsyncResult<Account>> resultHandler) {
-    log.debug("Client request to find account id: {}", accountId);
+    log.info("Client request to find account id: {}", accountId);
     discovery.getRecord(r -> r
       .getName()
       .equals("account-service"), res -> {
@@ -34,7 +30,7 @@ public class AccountClient {
       client
         .get("/account/" + accountId)
         .send(handler -> {
-          if (handler.succeeded()){
+          if (handler.succeeded()) {
             log.info("Handler succeeded with body: {}", handler
               .result()
               .bodyAsString());

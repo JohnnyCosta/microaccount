@@ -16,14 +16,14 @@ public final class CreateAccount {
     this.idGenerator = idGenerator;
   }
 
-  public Account create(String name,Long usd_balance) {
+  public Account create(String name,Float usd_balance) {
     String id = idGenerator.generate();
     Account account = Account
       .builder()
       .id(id)
       .name(name)
       .usd(usd_balance)
-      .btc(0L)
+      .btc(0F)
       .build();
 
     AccountValidator.validateCreateUser(account);

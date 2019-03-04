@@ -18,7 +18,7 @@ public final class CreateOrder {
     this.idGenerator = idGenerator;
   }
 
-  public Order createLimitOrder(String account_id, Long priceLimit) {
+  public Order createLimitOrder(String account_id, Float priceLimit) {
 
     String id = idGenerator.generate();
     Order order = Order
@@ -34,6 +34,11 @@ public final class CreateOrder {
     if (orderRepository
       .findById(id).isPresent()) {
       throw new OrderAlreadyExistsException(String.format("Order with id '%s' already exists",id));
+    }
+
+    if (orderRepository
+      .findByAccountId(account_id).isPresent()) {
+      throw new OrderAlreadyExistsException(String.format("Order already created for account id '%s' already exists",id));
     }
 
     return orderRepository.create(order);
