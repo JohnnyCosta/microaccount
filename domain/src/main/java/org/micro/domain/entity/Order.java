@@ -21,6 +21,8 @@ public class Order {
   @NonNull
   private Float priceLimit;
 
+  private Float btcPrice;
+
   @NonNull
   private Boolean finished;
 

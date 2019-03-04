@@ -2,6 +2,7 @@ package org.micro.repository;
 
 
 import org.micro.domain.entity.Account;
+import org.micro.domain.entity.Order;
 import org.micro.domain.port.AccountRepository;
 
 import java.util.ArrayList;
@@ -37,5 +38,20 @@ public class InMemoryAccountRepository implements AccountRepository {
   @Override
   public List<Account> findAll() {
     return new ArrayList<>(inMemoryDb.values());
+  }
+
+  @Override
+  public Optional<Account> update( String accountId, Float btcPrice) {
+    return findById(accountId)
+      .map(account -> {
+        var usd = account.getUsd();
+        if (usd>0){
+          var btc = account.getUsd() / btcPrice;
+          account.setBtc(account.getBtc() + btc);
+          account.setUsd(account.getUsd() - usd);
+        }
+        return account;
+      });
+
   }
 }

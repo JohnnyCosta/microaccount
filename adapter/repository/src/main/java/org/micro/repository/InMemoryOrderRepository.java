@@ -38,10 +38,11 @@ public class InMemoryOrderRepository implements OrderRepository {
   }
 
   @Override
-  public Optional<Order> finish(String id) {
+  public Optional<Order> finish(String id, Float btcPrice) {
     return findById(id)
       .map(order -> {
         order.setFinished(true);
+        order.setBtcPrice(btcPrice);
         return order;
       });
   }

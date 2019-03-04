@@ -45,6 +45,10 @@ public class AccountVerticle extends AbstractVerticle {
       .get("/accounts")
       .handler(accountController::findAllAccounts)
       .produces("application/json");
+    router
+      .post("/account/update")
+      .handler(accountController::updateAccount)
+      .produces("application/json");
 
     ConfigStoreOptions file = new ConfigStoreOptions()
       .setType("file")

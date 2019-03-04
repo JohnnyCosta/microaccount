@@ -15,8 +15,8 @@ public final class UpdateOrder {
     this.repository = repository;
   }
 
-  public Optional<Order> finish (String order_id) {
-   return repository.finish(order_id);
+  public Optional<Order> finish (String order_id, Float btcPrice) {
+   return repository.finish(order_id, btcPrice);
   }
 
 }
