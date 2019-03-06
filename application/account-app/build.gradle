@@ -18,7 +18,7 @@ dependencies {
 	)
 }
 
-mainClassName = 'org.micro.app.account.App'
+mainClassName = 'org.micro.app.account.AccountApp'
 
 shadowJar {
   classifier = 'fat'

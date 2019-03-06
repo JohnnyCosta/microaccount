@@ -12,18 +12,18 @@ public class OrderApp {
 
 
   public static void main(String[] args) throws IOException {
-//    if (args.length != 1) {
-//      log.error("Invalid number of arguments: <CONFIG>");
-//      printHelp();
-//      System.exit(1);
-//    } else {
-//
-//      Vertx vertx = Vertx.vertx();
-//      vertx.deployVerticle(new OrderVerticle(args[0]));
-//    }
+    if (args.length != 1) {
+      log.error("Invalid number of arguments: <CONFIG>");
+      printHelp();
+      System.exit(1);
+    } else {
 
-    Vertx vertx = Vertx.vertx();
-      vertx.deployVerticle(new OrderVerticle("order-app-1.json"));
+      Vertx vertx = Vertx.vertx();
+      vertx.deployVerticle(new OrderVerticle(args[0]));
+    }
+
+//    Vertx vertx = Vertx.vertx();
+//      vertx.deployVerticle(new OrderVerticle("order-app-1.json"));
 
   }
 
