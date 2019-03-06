@@ -33,23 +33,34 @@ public class OrderController {
     this.updateOrder = updateOrder;
   }
 
-  private Handler<Long> createPeriodicAction(Order order, BtcPriceClient btcPriceClient, Vertx vertx) {
+  private Handler<Long> createPeriodicAction(Order order, BtcPriceClient btcPriceClient, AccountClient accountClient, Vertx vertx) {
     return id -> {
 
       log.info("Starting periodic action");
 
-      btcPriceClient.getPrice(handler -> {
-        if (handler.succeeded()) {
-          var btcPrice = handler.result();
+      btcPriceClient.getPrice(btcPriceHandler -> {
+        if (btcPriceHandler.succeeded()) {
+          var btcPrice = btcPriceHandler.result();
           if (btcPrice.getPrice() > order.getPriceLimit()) {
             log.info("Handler detected that passed price limit, stop periodic action");
-            Optional<Order> finish = updateOrder.finish(order.getOrderId());
-            if (!finish.isPresent() || !finish.get().getFinished())
+            Optional<Order> finishOrder = updateOrder.finish(order.getOrderId(), btcPrice.getPrice());
+            if (!finishOrder.isPresent() || !finishOrder.get().getFinished())
               log.error("Error to finish order: {}", order.getOrderId());
             vertx.cancelTimer(id);
+
+            accountClient.update(order.getAccountId(), btcPrice.getPrice(), updateAccountHandler -> {
+              if (updateAccountHandler.succeeded()){
+                var account = updateAccountHandler.result();
+                log.info("Success to update account id: {}", account.getId());
+              } else {
+                log.error("Handler failed to update account", updateAccountHandler.cause());
+              }
+
+            });
+
           }
         } else {
-          log.error("Handler failed, aborting periodic action", handler.cause());
+          log.error("Handler failed, aborting periodic action", btcPriceHandler.cause());
           vertx.cancelTimer(id);
         }
       });
@@ -77,7 +88,7 @@ public class OrderController {
             var order = createOrder.createLimitOrder(createOrderVM.getAccount_id(), createOrderVM.getPrice_limit());
             var result = JsonObject.mapFrom(order);
 
-            vertx.setPeriodic(1000, createPeriodicAction(order, btcPriceClient, vertx));
+            vertx.setPeriodic(1000, createPeriodicAction(order, btcPriceClient,accountClient, vertx));
 
             sendSuccess(result, response);
           } else {

@@ -4,11 +4,12 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.micro.scenario.FindAccount;
+import org.micro.scenario.UpdateAccount;
 import org.micro.utils.JsonCollectors;
 import org.micro.vm.CreateAccountVM;
 import org.micro.scenario.CreateAccount;
 import io.vertx.ext.web.RoutingContext;
-import org.micro.vm.FindAccountVM;
+import org.micro.vm.UpdateAccountVM;
 
 import static java.util.Objects.isNull;
 
@@ -17,10 +18,12 @@ public class AccountController {
 
   private final CreateAccount createAccount;
   private final FindAccount findAccount;
+  private final UpdateAccount updateAccount;
 
-  public AccountController(CreateAccount createAccount, FindAccount findAccount) {
+  public AccountController(CreateAccount createAccount, FindAccount findAccount, UpdateAccount updateAccount) {
     this.createAccount = createAccount;
     this.findAccount = findAccount;
+    this.updateAccount = updateAccount;
   }
 
   public void createAccount(final RoutingContext routingContext) {
@@ -59,11 +62,29 @@ public class AccountController {
     var response = routingContext.response();
     var accounts = findAccount.findAllAccounts();
     var result = accounts.stream()
-      .map(account -> JsonObject.mapFrom(account))
+      .map(JsonObject::mapFrom)
       .collect(JsonCollectors.toJsonArray());
     response
       .putHeader("content-type", "application/json")
       .end(result.encodePrettily());
+  }
+
+  public void updateAccount (final RoutingContext routingContext) {
+    log.info("Request to update account");
+    var response = routingContext.response();
+    var body = routingContext.getBody();
+    if (isNull(body)) {
+      sendError(400, response);
+    } else {
+      var updateAccountVM = body.toJsonObject().mapTo(UpdateAccountVM.class);
+      var account = updateAccount.update(updateAccountVM.getAccountId(), updateAccountVM.getBtcPrice());
+      if (account.isEmpty()){
+        sendError(400, response);
+      } else {
+        var result = JsonObject.mapFrom(account.get());
+        sendSuccess(result, response);
+      }
+    }
   }
 
   private void sendError(int statusCode, HttpServerResponse response) {

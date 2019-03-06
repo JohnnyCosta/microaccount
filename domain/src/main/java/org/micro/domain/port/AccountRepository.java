@@ -1,6 +1,7 @@
 package org.micro.domain.port;
 
 import org.micro.domain.entity.Account;
+import org.micro.domain.entity.Order;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +16,5 @@ public interface AccountRepository {
 
   List<Account> findAll();
 
+  Optional<Account> update(String accountId, Float btcPrice);
 }

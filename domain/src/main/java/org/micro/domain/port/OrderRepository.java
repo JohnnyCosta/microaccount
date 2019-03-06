@@ -11,7 +11,7 @@ public interface OrderRepository {
 
   Optional<Order> findById(String orderId);
 
-  Optional<Order> finish(String orderId);
+  Optional<Order> finish(String orderId, Float btcPrice);
 
   Optional<Order> findByAccountId(String accountId);
 
