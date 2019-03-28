@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.micro.app.account.verticle.AccountVerticle;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 @Slf4j
@@ -12,6 +13,7 @@ public class AccountApp {
 
 
   public static void main(String[] args) throws IOException {
+    log.debug("Arguments: {}", Arrays.toString(args));
     if (args.length != 1) {
       log.error("Invalid number of arguments: <CONFIG>");
       printHelp();

@@ -47,4 +47,4 @@ localhost:8081/order
 ## Notes
 - Applications can be configured by customizing the JSON files : account-app-1.json and order-app-1.json
 - Postman project is available: micro.postman_collection.json
- 
+- Run application via gradle passing arguments: gradle run --args='account-app-1.json' 
