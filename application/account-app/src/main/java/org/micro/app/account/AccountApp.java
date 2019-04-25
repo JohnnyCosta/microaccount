@@ -43,6 +43,7 @@ public class AccountApp {
       if (Objects.isNull(configuration)) {
         log.error("Invalid argument: <CONFIG>");
         printHelp();
+        vertx.close();
         System.exit(1);
       } else {
         DeploymentOptions options = new DeploymentOptions().setConfig(configuration);

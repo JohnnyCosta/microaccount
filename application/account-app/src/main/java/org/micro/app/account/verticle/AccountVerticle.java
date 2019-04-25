@@ -138,6 +138,7 @@ public class AccountVerticle extends AbstractVerticle {
   private void failedEvent(Future<Void> future, String error) {
     log.error("Error to start account service: {}", error);
     future.fail(error);
+    vertx.close();
   }
 
 }
