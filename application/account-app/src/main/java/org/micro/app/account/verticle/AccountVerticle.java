@@ -26,18 +26,14 @@ import java.util.Objects;
 public class AccountVerticle extends AbstractVerticle {
 
   private final AccountController accountController = new AppConfig().getAccountController();
-  private final String configPath;
-
-  public AccountVerticle(String configPath) {
-    this.configPath = configPath;
-  }
 
 
   @Override
   public void start(Future<Void> future) {
+    startServer(future, vertx.createHttpServer(), configureRouter());
+  }
 
-    var server = vertx.createHttpServer();
-
+  private Router configureRouter() {
     var router = Router.router(vertx);
 
     HealthCheckHandler healthCheckHandler = HealthCheckHandler.create(vertx);
@@ -69,35 +65,24 @@ public class AccountVerticle extends AbstractVerticle {
       .post("/account/update")
       .handler(accountController::updateAccount)
       .produces("application/json");
-
-    ConfigStoreOptions file = new ConfigStoreOptions()
-      .setType("file")
-      .setConfig(new JsonObject().put("path", configPath));
-    ConfigRetriever retriever = ConfigRetriever.create(vertx, new ConfigRetrieverOptions().addStore(file));
-
-    retriever.getConfig(conf -> {
-      final JsonObject configuration = conf.result();
-      if (Objects.isNull(configuration)) {
-        failedEvent(future, "Error to get configuration");
-      } else {
-        startServer(future, server, router, configuration);
-      }
-    });
+    return router;
   }
 
-  private void startServer(Future<Void> future, HttpServer server, Router router, JsonObject configuration) {
+  private void startServer(Future<Void> future, HttpServer server, Router router) {
+    JsonObject configuration = config();
     server
       .requestHandler(router)
       .listen(configuration.getInteger("port"), res -> {
         if (res.succeeded()) {
-          register(future, configuration);
+          register(future);
         } else {
           failedEvent(future, "Error to bind port");
         }
       });
   }
 
-  private void register(Future<Void> future, JsonObject configuration) {
+  private void register(Future<Void> future) {
+    JsonObject configuration = config();
     JsonObject healthConfig = configuration
       .getJsonObject("health");
 
