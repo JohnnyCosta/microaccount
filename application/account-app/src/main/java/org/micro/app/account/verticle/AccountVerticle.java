@@ -6,6 +6,8 @@ import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.healthchecks.HealthCheckHandler;
+import io.vertx.ext.healthchecks.Status;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -30,6 +32,17 @@ public class AccountVerticle extends AbstractVerticle {
     var server = vertx.createHttpServer();
 
     var router = Router.router(vertx);
+
+    HealthCheckHandler healthCheckHandler = HealthCheckHandler.create(vertx);
+
+    router
+      .get("/health")
+      .handler(healthCheckHandler);
+
+    healthCheckHandler.register("basic-check", future -> {
+      future.complete(Status.OK());
+    });
+
     router
       .route()
       .handler(BodyHandler.create());
@@ -61,6 +74,11 @@ public class AccountVerticle extends AbstractVerticle {
         .listen(conf
           .result()
           .getInteger("port"));
+
+      JsonObject healthConfig = conf
+        .result()
+        .getJsonObject("health");
+
       JsonObject json = new JsonObject()
         .put("ID", conf
           .result()
@@ -72,7 +90,15 @@ public class AccountVerticle extends AbstractVerticle {
         .put("Port", conf
           .result()
           .getInteger("port"))
-        .put("Tags", new JsonArray().add("http-endpoint"));
+        .put("Tags", new JsonArray().add("http-endpoint"))
+        .put("Check",
+          new JsonObject()
+            .put("DeregisterCriticalServiceAfter", healthConfig.getString("DeregisterCriticalServiceAfter"))
+            .put("Method", "GET")
+            .put("HTTP", healthConfig.getString("url"))
+            .put("Interval", healthConfig.getString("Interval"))
+        );
+
 
       WebClient client = WebClient.create(vertx);
       JsonObject discoveryConfig = conf

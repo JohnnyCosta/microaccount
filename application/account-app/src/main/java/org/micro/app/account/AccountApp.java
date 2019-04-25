@@ -14,18 +14,18 @@ public class AccountApp {
 
   public static void main(String[] args) throws IOException {
     log.debug("Arguments: {}", Arrays.toString(args));
-    if (args.length != 1) {
-      log.error("Invalid number of arguments: <CONFIG>");
-      printHelp();
-      System.exit(1);
-    } else {
+//    if (args.length != 1) {
+//      log.error("Invalid number of arguments: <CONFIG>");
+//      printHelp();
+//      System.exit(1);
+//    } else {
+//
+//      Vertx vertx = Vertx.vertx();
+//      vertx.deployVerticle(new AccountVerticle(args[0]));
+//    }
 
-      Vertx vertx = Vertx.vertx();
-      vertx.deployVerticle(new AccountVerticle(args[0]));
-    }
-
-//    Vertx vertx = Vertx.vertx();
-//      vertx.deployVerticle(new AccountVerticle("account-app-1.json"));
+    Vertx vertx = Vertx.vertx();
+      vertx.deployVerticle(new AccountVerticle("account-app-1.json"));
 
   }
 
